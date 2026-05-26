@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Invest - Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0c10; color: #ffffff; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 450px; }
+
+        /* Login Screen Style */
+        #loginScreen { position: fixed; top:0; left:0; width:100%; height:100%; background:#0b0c10; z-index: 99999; display:flex; justify-content:center; align-items:center; padding:20px; }
+        .login-box { background:#12141c; border:1px solid #c5a059; padding:30px; border-radius:20px; width:100%; max-width:380px; text-align:center; }
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 25px; width: 100%; }
+        .welcome-msg { font-size: 22px; font-weight: bold; width: 55%; }
+        .welcome-msg span { display: block; font-size: 14px; color: #858585; font-weight: normal; margin-top: 5px; }
+        .header-buttons { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+        .btn-top-profile { background-color: #1a1c23; border: 1px solid #2c2f3b; color: #c5a059; padding: 8px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-logout { background-color: #ff4d4d; border: none; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+
+        /* Soldes */
+        .soldes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; width: 100%; }
+        .solde-card { background-color: #12141c; border-radius: 16px; padding: 20px; border: 1px solid #1f2833; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
+        .solde-title { color: #6c727f; font-size: 11px; text-transform: uppercase; font-weight: bold; }
+        .solde-value { font-size: 24px; font-weight: bold; margin-top: 10px; margin-bottom: 15px; color: #ffffff; }
+        .btn-transfer { background-color: #c5a059; color: #0b0c10; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; width: 100%; }
+
+        /* Active Plan & Timer */
+        .active-plan-section { background-color: #12141c; border-radius: 16px; padding: 20px; border: 1px solid #1f2833; margin-bottom: 25px; width: 100%; }
+        .plan-box { display: flex; align-items: center; gap: 15px; }
+        .plan-icon { background-color: #1a1c23; width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #c5a059; }
+        .timer-badge { background-color: #ff4d4d; color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-top: 5px; display: inline-block; font-family: monospace; }
+
+        /* Menu */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .menu-btn { background-color: #12141c; border: 1px solid #1f2833; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+        .menu-btn:hover { border-color: #c5a059; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background-color: #12141c; border: 1px solid #c5a059; border-radius: 20px; padding: 25px; width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; right: 20px; top: 15px; color: #858585; font-size: 24px; cursor: pointer; }
+        .modal-title { color: #c5a059; font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; text-transform: uppercase; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 11px; color: #6c727f; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; background-color: #1a1c23; border: 1px solid #2c2f3b; color: #ffffff; padding: 12px; border-radius: 10px; font-size: 14px; outline: none; }
+        
+        .address-box { background-color: #1a1c23; border: 1px dashed #c5a059; padding: 12px; border-radius: 10px; font-size: 12px; word-break: break-all; display: flex; justify-content: space-between; align-items: center; }
+        .btn-copy { background-color: #c5a059; color: #0b0c10; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        /* Tables & Lists */
+        .modal-plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .modal-plan-card { background-color: #1a1c23; border: 1px solid #2c2f3b; border-radius: 14px; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+        .modal-plan-stats { background-color: #12141c; width: 100%; padding: 8px; border-radius: 8px; font-size: 10px; text-align: left; margin-bottom: 12px; }
+        .btn-act { width: 100%; padding: 8px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; border: none; }
+        .btn-act.available-btn { background-color: #c5a059; color: #0b0c10; }
+        
+        .filleuls-section { margin-top: 20px; border-top: 1px dashed #2c2f3b; padding-top: 15px; }
+        .table-custom { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .table-custom th, .table-custom td { padding: 10px 6px; text-align: left; border-bottom: 1px solid #1a1c23; }
+        .table-custom th { color: #6c727f; text-transform: uppercase; font-size: 10px; }
+
+        /* Admin UI Buttons */
+        .btn-admin-gate { background: linear-gradient(90deg, #c5a059, #e5c07b); color:#0b0c10; width:100%; padding:14px; border-radius:12px; font-weight:bold; border:none; margin-top:25px; cursor:pointer; text-transform:uppercase; font-size:13px; letter-spacing:1px; }
+        .btn-edit { background-color: #3a86ff; color: white; padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; margin-right: 4px; }
+    </style>
+</head>
+<body>
+
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2 style="color:#c5a059; margin-bottom:20px; font-size:22px;">CONNEXION NEXORA</h2>
+            <form id="loginForm">
+                <div class="form-group" style="text-align:left;">
+                    <label>Email Utilisateur</label>
+                    <input type="email" id="loginEmail" placeholder="rkmotion94@gmail.com" required style="border-color:#c5a059;">
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label>Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required style="border-color:#c5a059;">
+                </div>
+                <button type="submit" class="btn-transfer" style="padding:12px; margin-top:10px; font-size:14px;">SE CONNECTER</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="header">
+            <div class="welcome-msg">
+                Bonjour, <span id="displayUserName" style="display:inline; font-size:22px; color:#fff;">Grace</span> 👋
+                <span>Tableau de bord Nexora Invest.</span>
+            </div>
+            <div class="header-buttons">
+                <button class="btn-top-profile" onclick="openModal('profileModal')">👤 Profil</button>
+                <button class="btn-logout" onclick="logoutSystem()">Logout 🚪</button>
+            </div>
+        </div>
+
+        <div class="soldes-grid">
+            <div class="solde-card">
+                <div class="solde-title">Solde Principal</div>
+                <div class="solde-value"><span id="mainBalance">0.00</span> USDT</div>
+                <div class="solde-desc">Pour retrait et activation</div>
+            </div>
+            <div class="solde-card">
+                <div class="solde-title">Solde de Revenus</div>
+                <div class="solde-value"><span id="profitBalance">0.00</span> USDT</div>
+                <button class="btn-transfer" onclick="transferProfit()">↑ Transférer au Principal</button>
+            </div>
+        </div>
+
+        <div class="active-plan-section">
+            <div class="section-label" style="font-size:13px; font-weight:bold; margin-bottom:10px;">Plan en cours d'utilisation</div>
+            <div class="plan-box" id="activePlanBox">
+                <div class="plan-icon" id="planIconStatus">💤</div>
+                <div class="plan-info">
+                    <h4 id="activePlanName" style="color: #858585;">Aucun plan actif</h4>
+                    <p id="planTimerContainer" style="font-size:12px; color:#858585;">Activez n'importe quel plan maintenant.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-btn" onclick="openModal('depositModal')"><div>💳</div><div style="font-size:13px; font-weight:bold; margin-top:10px;">Déposer</div></div>
+            <div class="menu-btn" onclick="openModal('withdrawModal')"><div>💸</div><div style="font-size:13px; font-weight:bold; margin-top:10px;">Retirer</div></div>
+            <div class="menu-btn" onclick="openModal('plansModal')"><div>📈</div><div style="font-size:13px; font-weight:bold; margin-top:10px;">Voir les plans</div></div>
+            <div class="menu-btn" onclick="openModal('historyModal')"><div>📜</div><div style="font-size:13px; font-weight:bold; margin-top:10px;">Historique</div></div>
+        </div>
+    </div>
+
+    <div id="plansModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('plansModal')">&times;</span>
+            <div class="modal-title">📈 PLANS CLOUD MINING</div>
+            <div class="modal-plans-grid">
+                <div class="modal-plan-card">
+                    <div style="font-size:24px; color:#c5a059;">🖥️</div><div>Plan Starter</div><div style="font-size:18px; font-weight:bold; color:#c5a059;">5 USDT</div>
+                    <div class="modal-plan-stats">Gain: <span style="color:#00ffcc;">+1 USDT</span>/j<br>Durée: 8 Jours</div>
+                    <button class="btn-act available-btn" onclick="activatePlan(5, 'Starter', 1, 8)">ACTIVER</button>
+                </div>
+                <div class="modal-plan-card">
+                    <div style="font-size:24px; color:#c5a059;">⚙️</div><div>Plan Intermédiaire</div><div style="font-size:18px; font-weight:bold; color:#c5a059;">20 USDT</div>
+                    <div class="modal-plan-stats">Gain: <span style="color:#00ffcc;">+4 USDT</span>/j<br>Durée: 8 Jours</div>
+                    <button class="btn-act available-btn" onclick="activatePlan(20, 'Intermédiaire', 4, 8)">ACTIVER</button>
+                </div>
+                <div class="modal-plan-card">
+                    <div style="font-size:24px; color:#c5a059;">🔧</div><div>Plan Avancé</div><div style="font-size:18px; font-weight:bold; color:#c5a059;">50 USDT</div>
+                    <div class="modal-plan-stats">Gain: <span style="color:#00ffcc;">+10 USDT</span>/j<br>Durée: 10 Jours</div>
+                    <button class="btn-act available-btn" onclick="activatePlan(50, 'Avancé', 10, 10)">ACTIVER</button>
+                </div>
+                <div class="modal-plan-card">
+                    <div style="font-size:24px; color:#c5a059;">🏭</div><div>Plan Pro</div><div style="font-size:18px; font-weight:bold; color:#c5a059;">100 USDT</div>
+                    <div class="modal-plan-stats">Gain: <span style="color:#00ffcc;">+20 USDT</span>/j<br>Durée: 8 Jours</div>
+                    <button class="btn-act available-btn" onclick="activatePlan(100, 'Professionnel', 20, 8)">ACTIVER</button>
+                </div>
+                <div class="modal-plan-card" style="grid-column: span 2; border-color: #c5a059; background: linear-gradient(145deg, #12141c, #1a1c23);">
+                    <div style="font-size:28px; color:#c5a059;">👑</div><div style="font-weight:bold; letter-spacing:1px;">PLAN ÉLITE</div><div style="font-size:20px; font-weight:bold; color:#c5a059;">250 USDT</div>
+                    <div class="modal-plan-stats" style="text-align:center;">Gain: <span style="color:#00ffcc; font-weight:bold;">+55 USDT</span> / jour &nbsp;|&nbsp; Durée: <span style="color:#c5a059; font-weight:bold;">10 Jours</span></div>
+                    <button class="btn-act available-btn" style="width:80%; padding:10px;" onclick="activatePlan(250, 'Élite', 55, 10)">ACTIVER LE PLAN ÉLITE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('historyModal')">&times;</span>
+            <div class="modal-title">📜 HISTORIQUE DES TRANSACTIONS</div>
+            <table class="table-custom">
+                <thead><tr><th>Montant</th><th>Type</th><th>Date</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>253.00 USDT</strong></td><td>Dépôt</td><td>26 mai 2026</td><td style="color:#00ffcc;">Succès</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
+            <div class="modal-title">📥 EFFECTUER UN DÉPÔT</div>
+            <form id="depositForm">
+                <div class="form-group"><label>Choisir le Réseau</label>
+                    <select id="depositNetwork"><option value="TRC20">Tron (TRC20)</option><option value="BEP20">BEP20</option></select>
+                </div>
+                <div class="form-group"><label>Adresse Admin</label><div class="address-box"><span id="addrText">THTB2ehNDYo4d4Xbih5a31LN3cBJTyHHSy</span><button type="button" class="btn-copy" onclick="copyAddress('addrText')">Copier</button></div></div>
+                <div class="form-group"><label>Montant (Min 6)</label><input type="number" id="depAmount" min="6" required></div>
+                <button type="submit" class="btn-transfer">SOUMETTRE</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
+            <div class="modal-title">📤 DEMANDE DE RETRAIT</div>
+            <form id="withdrawForm">
+                <div class="form-group"><label>Montant à retirer (USDT)</label><input type="number" id="witAmount" required min="1"></div>
+                <button type="submit" class="btn-transfer" style="background-color:#ff4d4d; color:white;">LANCER LA DEMANDE</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('profileModal')">&times;</span>
+            <div class="modal-title">👤 MON PROFIL</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                <div class="form-group"><label>Nom</label><input type="text" id="profNom" readonly style="background:#1a1c23; color:#fff; font-weight:bold;"></div>
+                <div class="form-group"><label>Prénom</label><input type="text" id="profPrenom" readonly style="background:#1a1c23; color:#fff; font-weight:bold;"></div>
+            </div>
+            <div class="form-group"><label>Adresse Email</label><input type="text" id="profEmail" readonly style="background:#1a1c23; color:#858585;"></div>
+            
+            <div class="form-group" style="margin-top: 15px;"><label>Lien de Parrainage</label>
+                <div class="address-box">
+                    <span id="refLinkText" style="font-size: 12px; color:#c5a059; font-weight:bold;">Génération du lien...</span>
+                    <button type="button" class="btn-copy" onclick="copyAddress('refLinkText')">Copier</button>
+                </div>
+            </div>
+
+            <div class="filleuls-section">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <label style="color:#c5a059;">Mes Filleuls Directs</label>
+                    <span id="filleulCount" style="background:#c5a059; color:#0b0c10; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:bold;">0</span>
+                </div>
+                <table class="table-custom">
+                    <thead><tr><th>Filleul</th><th>Plan Actif</th><th>Réseau</th></tr></thead>
+                    <tbody id="filleulsTableBody"></tbody>
+                </table>
+            </div>
+
+            <button id="adminGateBtn" class="btn-admin-gate" style="display:none;" onclick="closeModal('profileModal'); openModal('adminPanelModal');">🛠️ Espace Admin</button>
+        </div>
+    </div>
+
+    <div id="adminPanelModal" class="modal">
+        <div class="modal-content" style="max-width:480px;">
+            <span class="close-modal" onclick="closeModal('adminPanelModal')">&times;</span>
+            <div class="modal-title" style="color:#ff4d4d;">⚙️ PANNEAU DE CONTRÔLE ADMIN</div>
+            <h3 style="color:#c5a059; font-size:14px; margin-bottom:10px; border-bottom:1px solid #2c2f3b; padding-bottom:5px;">👥 UTILISATEURS DU SYSTÈME</h3>
+            <table class="table-custom">
+                <thead><tr><th>Utilisateur</th><th>Solde P.</th><th>Actions</th></tr></thead>
+                <tbody id="adminUserTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('currentNexoraUser')) || null;
+        let lastPayoutDay = localStorage.getItem('lastPayoutDay') || ""; 
+
+        let usersDB = JSON.parse(localStorage.getItem('usersDB')) || {
+            "colinreakarfen94@gmail.com": { nom: "COLIN", prenom: "Reakarfen", email: "colinreakarfen94@gmail.com", pass: "Reakarfen94", mainBal: 416.00, profitBal: 176.00, role: "admin", activePlan: null, filleuls: [] },
+            "rkmotion94@gmail.com": { 
+                nom: "KAYCEE", prenom: "Grace", email: "rkmotion94@gmail.com", pass: "Reakarfen94", 
+                mainBal: 253.00, profitBal: 39.00, role: "user", activePlan: null,
+                filleuls: [
+                    { name: "Jean Pierrot", plan: "Avancé (50$)", network: "TRC20" },
+                    { name: "Sarah Almonor", plan: "Avancé (50$)", network: "BEP20" },
+                    { name: "Marc Evans", plan: "Pro (100$)", network: "TRC20" },
+                    { name: "Clara Joseph", plan: "Pro (100$)", network: "BEP20" },
+                    { name: "Woody Smith", plan: "Élite (250$)", network: "TRC20" },
+                    { name: "Daphney Louis", plan: "Élite (250$)", network: "BEP20" }
+                ]
+            }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let emailInput = document.getElementById('loginEmail').value.trim();
+            let passInput = document.getElementById('loginPassword').value;
+
+            if (usersDB[emailInput] && usersDB[emailInput].pass === passInput) {
+                currentUser = usersDB[emailInput];
+                document.getElementById('loginScreen').style.display = 'none';
+                saveData();
+            } else { 
+                alert("Identifiants incorrects !"); 
+            }
+        });
+
+        function logoutSystem() {
+            if(currentUser) {
+                usersDB[currentUser.email] = currentUser;
+            }
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            localStorage.removeItem('currentNexoraUser');
+            currentUser = null;
+            
+            document.getElementById('loginEmail').value = "";
+            document.getElementById('loginPassword').value = "";
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+
+        function saveData() {
+            if (currentUser) {
+                usersDB[currentUser.email] = currentUser;
+            }
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            localStorage.setItem('currentNexoraUser', JSON.stringify(currentUser));
+            localStorage.setItem('lastPayoutDay', lastPayoutDay);
+            updateUI();
+        }
+
+        function updateUI() {
+            if (!currentUser) return;
+
+            document.getElementById('displayUserName').innerText = currentUser.prenom;
+            document.getElementById('mainBalance').innerText = currentUser.mainBal.toFixed(2);
+            document.getElementById('profitBalance').innerText = currentUser.profitBal.toFixed(2);
+
+            document.getElementById('profNom').value = currentUser.nom;
+            document.getElementById('profPrenom').value = currentUser.prenom;
+            document.getElementById('profEmail').value = currentUser.email;
+
+            // KÒD DINAMIK POU LYEN PARÈNAJ LA SOU GITHUB PAGES
+            let userCode = currentUser.prenom.toUpperCase() + Math.floor(100 + Math.random() * 900);
+            if(currentUser.prenom.toUpperCase() === "GRACE") userCode = "GRACE94"; // kenbe ansyen kòd Grace la si se li
+            
+            let currentOrigin = window.location.origin + window.location.pathname;
+            let referralUrl = currentOrigin.replace("dashboard.html", "inscription.html") + "?ref=" + userCode;
+            document.getElementById('refLinkText').innerText = referralUrl;
+
+            document.getElementById('filleulCount').innerText = currentUser.filleuls.length;
+            const fBody = document.getElementById('filleulsTableBody');
+            fBody.innerHTML = "";
+            currentUser.filleuls.forEach(f => {
+                fBody.innerHTML += `<tr><td><strong>${f.name}</strong></td><td><span style="color:#c5a059; font-weight:bold;">${f.plan}</span></td><td><span style="color:#00ffcc;">${f.network}</span></td></tr>`;
+            });
+
+            if (currentUser.role === "admin") {
+                document.getElementById('adminGateBtn').style.display = 'block';
+                renderAdminPanel();
+            } else {
+                document.getElementById('adminGateBtn').style.display = 'none';
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function copyAddress(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); alert("Copié !"); }
+
+        function activatePlan(cost, name, dailyPayout, durationDays) {
+            if (currentUser.activePlan !== null) {
+                alert("Erreur: Vous avez déjà un plan actif ! Attendez qu'il se termine.");
+                return;
+            }
+            if (currentUser.mainBal < cost) {
+                alert("Solde principal insuffisant !");
+                return;
+            }
+
+            currentUser.mainBal -= cost;
+            let durationMs = durationDays * 24 * 60 * 60 * 1000;
+            
+            currentUser.activePlan = {
+                name: name,
+                cost: cost,
+                dailyPayout: dailyPayout,
+                endTime: Date.now() + durationMs
+            };
+
+            alert("Plan " + name + " activé avec succès !");
+            saveData();
+            closeModal('plansModal');
+        }
+
+        function runSystemEngine() {
+            if (!currentUser) return;
+
+            if (!currentUser.activePlan) {
+                document.getElementById('planIconStatus').innerText = "💤";
+                document.getElementById('activePlanName').innerText = "Aucun plan actif";
+                document.getElementById('activePlanName').style.color = "#858585";
+                document.getElementById('planTimerContainer').innerHTML = "Activez n'importe quel plan maintenant.";
+                return;
+            }
+
+            let now = Date.now();
+            let timeLeft = currentUser.activePlan.endTime - now;
+
+            if (timeLeft <= 0) {
+                currentUser.activePlan = null;
+                alert("Votre plan actuel est arrivé à terme ! Vous pouvez en activer un nouveau.");
+                saveData();
+                return;
+            }
+
+            document.getElementById('planIconStatus').innerText = "⚡";
+            document.getElementById('activePlanName').innerText = "Plan " + currentUser.activePlan.name + " (En cours)";
+            document.getElementById('activePlanName').style.color = "#00ffcc";
+
+            let totalSecs = Math.floor(timeLeft / 1000);
+            let days = Math.floor(totalSecs / (24 * 3600));
+            totalSecs %= (24 * 3600);
+            let hours = Math.floor(totalSecs / 3600);
+            totalSecs %= 3600;
+            let mins = Math.floor(totalSecs / 60);
+            let secs = totalSecs % 60;
+
+            document.getElementById('planTimerContainer').innerHTML = `
+                Temps restant: <br>
+                <span class="timer-badge">${days}j ${hours}h ${mins}m ${secs}s</span>
+            `;
+
+            let currentDateObj = new Date();
+            let currentDayString = currentDateObj.toDateString(); 
+            let currentHour = currentDateObj.getHours();
+
+            if (currentHour >= 3 && lastPayoutDay !== currentDayString) {
+                currentUser.profitBal += currentUser.activePlan.dailyPayout;
+                lastPayoutDay = currentDayString; 
+                saveData();
+                alert(`Distribution automatique! +${currentUser.activePlan.dailyPayout} USDT (Gain du jour).`);
+            }
+        }
+
+        setInterval(runSystemEngine, 1000);
+
+        function transferProfit() {
+            let amount = parseFloat(prompt(`Combien transférer au principal ? Max: ${currentUser.profitBal}`));
+            if (isNaN(amount) || amount <= 0 || amount > currentUser.profitBal) return;
+            currentUser.profitBal -= amount; 
+            currentUser.mainBal += amount; 
+            saveData();
+        }
+
+        function renderAdminPanel() {
+            const tbodyUsers = document.getElementById('adminUserTableBody');
+            if(!tbodyUsers) return;
+            tbodyUsers.innerHTML = "";
+            Object.keys(usersDB).forEach(key => {
+                let u = usersDB[key];
+                tbodyUsers.innerHTML += `
+                    <tr>
+                        <td><strong>${u.prenom}</strong><br><span style="font-size:10px; color:#858585;">${u.email}</span></td>
+                        <td>${u.mainBal.toFixed(2)} USDT</td>
+                        <td><button class="btn-edit" onclick="editUserBalance('${u.email}')">Mod</button></td>
+                    </tr>`;
+                });
+        }
+
+        function editUserBalance(email) {
+            let val = prompt("Modifier la Balance Principale de cet utilisateur:", usersDB[email].mainBal);
+            if(val && !isNaN(parseFloat(val))) {
+                usersDB[email].mainBal = parseFloat(val);
+                if(currentUser && currentUser.email === email) currentUser.mainBal = parseFloat(val);
+                saveData();
+            }
+        }
+
+        document.getElementById('depositForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('depAmount').value);
+            currentUser.mainBal += amount; saveData(); alert(`Dépôt simulé réussi ! +${amount} USDT.`); closeModal('depositModal');
+        });
+
+        document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Demande de retrait transmise."); closeModal('withdrawModal');
+        });
+
+        window.onclick = function(e) { if (e.target.className === 'modal') e.target.style.display = "none"; }
+         
+        if (currentUser) {
+            document.getElementById('loginScreen').style.display = 'none';
+            saveData();
+        }
+    </script>
+</body>
+</html>

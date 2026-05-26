@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Invest - Inscription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .register-container {
+            background-color: #12141c;
+            border: 1px solid #1f2833;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 50%;
+        }
+
+        .marketing-text {
+            background: linear-gradient(45deg, #1f2833, #12141c);
+            border-left: 3px solid #c5a059;
+            padding: 12px;
+            font-size: 13.5px;
+            color: #e5c179;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #c5a059;
+            font-size: 13px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background-color: #1f2833;
+            border: 1px solid #45a29e;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #c5a059;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #c5a059;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        .btn-register {
+            background-color: #c5a059;
+            color: #0b0c10;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-register:hover {
+            background-color: #e5c179;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #858585;
+        }
+
+        .login-link a {
+            color: #c5a059;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sponsor-badge {
+            background-color: #1a1c23;
+            border: 1px dashed #c5a059;
+            color: #00ffcc;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <div class="logo-area">
+            <img src="IMG_2077.png" alt="Nexora Invest Logo" class="logo-img">
+            <div class="subtitle" style="color: #858585; font-size: 14px;">Créer un compte d'investissement</div>
+        </div>
+
+        <div class="marketing-text">
+            "Investir aujourd'hui, gagner demain. Rejoignez la révolution du Cloud Mining de pointe et sécurisez votre liberté financière avec des rendements quotidiens garantis."
+        </div>
+
+        <!-- Ti bwat sa a ap parèt pou montre non parenn lan si moun lan klike sou yon lyen -->
+        <div id="sponsorBox" class="sponsor-badge"></div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Nom</label>
+                <input type="text" id="regNom" placeholder="Votre nom" required>
+            </div>
+
+            <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" id="regPrenom" placeholder="Votre prénom" required>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse Email</label>
+                <input type="email" id="regEmail" placeholder="exemple@mail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Réseau Crypto Préféré</label>
+                <select id="crypto-network">
+                    <option value="TRC20">Tether USDT (TRC20)</option>
+                    <option value="BEP20">Tether USDT (BEP20)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse de Retrait USDT</label>
+                <input type="text" id="regWallet" placeholder="Entrez votre adresse wallet" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <span class="toggle-password" onclick="togglePass('password')">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmer le mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirm_password" placeholder="••••••••" required>
+                    <span class="toggle-password" onclick="togglePass('confirm_password')">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-register">S'INSCRIRE</button>
+
+            <div class="login-link">
+                Déjà membre ? <a href="index.html">Se connecter</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        // 1. CHECHE SI GEN YON KÒD PARÈNAJ NAN URL LA
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        let sponsorEmail = null;
+
+        if (refCode) {
+            const sponsorBox = document.getElementById('sponsorBox');
+            sponsorBox.style.display = "block";
+            
+            if (refCode.toUpperCase() === "GRACE94") {
+                sponsorBox.innerText = "Parrain: KAYCEE Grace ✨";
+                sponsorEmail = "rkmotion94@gmail.com"; // Email Kaycee nan sistèm nan
+            } else {
+                sponsorBox.innerText = "Code Parrainage: " + refCode;
+            }
+        }
+
+        // 2. LÈ ITILIZATÈ A SUBMIT FÒM LAN
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let nom = document.getElementById('regNom').value.trim();
+            let prenom = document.getElementById('regPrenom').value.trim();
+            let email = document.getElementById('regEmail').value.trim().toLowerCase();
+            let network = document.getElementById('crypto-network').value;
+            let wallet = document.getElementById('regWallet').value.trim();
+            let pass = document.getElementById('password').value;
+            let confirmPass = document.getElementById('confirm_password').value;
+
+            if (pass !== confirmPass) {
+                alert("Erreur: Les mots de passe ne correspondent pas !");
+                return;
+            }
+
+            // Chaje baz de done a
+            let usersDB = JSON.parse(localStorage.getItem('usersDB')) || {
+                "colinreakarfen94@gmail.com": { nom: "COLIN", prenom: "Reakarfen", email: "colinreakarfen94@gmail.com", pass: "Reakarfen94", mainBal: 416.00, profitBal: 176.00, role: "admin", activePlan: null, filleuls: [] },
+                "rkmotion94@gmail.com": { 
+                    nom: "KAYCEE", prenom: "Grace", email: "rkmotion94@gmail.com", pass: "Reakarfen94", 
+                    mainBal: 253.00, profitBal: 39.00, role: "user", activePlan: null, filleuls: [] 
+                }
+            };
+
+            if (usersDB[email]) {
+                alert("Erreur: Cet email est déjà enregistré !");
+                return;
+            }
+
+            // Kreye nouvo itilizatè a
+            let newUser = {
+                nom: nom.toUpperCase(),
+                prenom: prenom,
+                email: email,
+                pass: pass,
+                mainBal: 0.00,
+                profitBal: 0.00,
+                role: "user",
+                cryptoNetwork: network,
+                walletAddress: wallet,
+                activePlan: null,
+                filleuls: []
+            };
+
+            // 3. LOGIK PARÈNAJ OTO MATIK: Si gen yon parenn, mete nouvo moun lan nan lis li a
+            if (sponsorEmail && usersDB[sponsorEmail]) {
+                // Si lis la te vid oswa pa t egziste, kreye l
+                if (!usersDB[sponsorEmail].filleuls) {
+                    usersDB[sponsorEmail].filleuls = [];
+                }
+                
+                // Ajoute nouvo filleul la nan lis la
+                usersDB[sponsorEmail].filleuls.push({
+                    name: prenom + " " + nom.toUpperCase(),
+                    plan: "Aucun plan", // L ap chanje lè l fin achte yon plan
+                    network: network
+                });
+            }
+
+            // Sove tout bagay nan LocalStorage
+            usersDB[email] = newUser;
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            localStorage.setItem('currentNexoraUser', JSON.stringify(newUser));
+
+            alert("Inscription réussie ! Bienvenue chez Nexora Invest.");
+
+            // Redireksyon sou Dashboard la
+            let currentPath = window.location.origin + window.location.pathname;
+            window.location.href = currentPath.replace("inscription.html", "dashboard.html");
+        });
+    </script>
+</body>
+</html>

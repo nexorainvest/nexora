@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Invest - Connexion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background-color: #12141c;
+            border: 1px solid #1f2833;
+            border-radius: 12px;
+            padding: 35px 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 50%;
+        }
+
+        .marketing-text {
+            color: #858585;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #c5a059;
+            font-size: 13px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background-color: #1f2833;
+            border: 1px solid #45a29e;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #c5a059;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #c5a059;
+            font-size: 18px;
+        }
+
+        .btn-login {
+            background-color: #c5a059;
+            color: #0b0c10;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #e5c179;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #858585;
+        }
+
+        .register-link a {
+            color: #c5a059;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-area">
+            <img src="IMG_2077.png" alt="Nexora Invest Logo" class="logo-img">
+            <div class="subtitle" style="color: #858585; font-size: 14px; margin-top: 5px;">Accéder à votre espace</div>
+        </div>
+
+        <div class="marketing-text">
+            "Le minage intelligent à portée de main. Connectez-vous pour suivre la croissance de vos actifs en temps réel."
+        </div>
+
+        <!-- Mwen modifye onsubmit la pou l rele nouvo fonksyon an -->
+        <form onsubmit="handleLogin(event);">
+            <div class="form-group">
+                <label>Adresse Email</label>
+                <input type="email" placeholder="exemple@mail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="login_password" placeholder="••••••••" required>
+                    <span class="toggle-password" onclick="togglePass('login_password')">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">SE CONNECTER</button>
+
+            <div class="register-link">
+                Nouveau sur la plateforme ? <a href="inscription.html">Créer un compte</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        // Nouvo fonksyon ki jere alèt la ak redirection an
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('Connexion réussie (Simulation)');
+            
+            // Liy sa a ap travay ni an lokal ni sou GitHub Pages pou chanje paj la
+            window.location.href = window.location.pathname.replace("connexion.html", "dashboard.html");
+        }
+    </script>
+</body>
+</html>

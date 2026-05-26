@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Invest - Comment ça fonctionne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            line-height: 1.6;
+            padding-bottom: 80px; /* Pou popup la pa kache kontni */
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #12141c;
+            border-bottom: 1px solid #1f2833;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo img {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: #c5a059;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-buttons .btn {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-login {
+            color: #c5a059;
+            border: 1px solid #c5a059;
+        }
+
+        .btn-register {
+            background-color: #c5a059;
+            color: #0b0c10;
+        }
+
+        .btn-register:hover {
+            background-color: #e5c179;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 10%;
+            background: linear-gradient(180deg, #12141c, #0b0c10);
+        }
+
+        .hero h1 {
+            color: #c5a059;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #858585;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Section Avantages */
+        .section-container {
+            padding: 40px 5%;
+        }
+
+        .section-title {
+            color: #c5a059;
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .adv-card {
+            background-color: #12141c;
+            border: 1px solid #1f2833;
+            border-radius: 8px;
+            padding: 25px;
+            border-top: 3px solid #c5a059;
+        }
+
+        .adv-card h3 {
+            color: #c5a059;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        /* Section Etapes */
+        .steps-container {
+            background-color: #12141c;
+            padding: 50px 5%;
+            border-y: 1px solid #1f2833;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background-color: #c5a059;
+            color: #0b0c10;
+            font-size: 24px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .step-text h4 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .step-text p {
+            color: #858585;
+            font-size: 15px;
+        }
+
+        /* Fake Activity Popup Styles */
+        #activity-popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #1f2833;
+            border-left: 4px solid #45a29e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            transform: translateY(150%);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        #activity-popup.show {
+            transform: translateY(0);
+        }
+
+        .popup-icon {
+            font-size: 20px;
+        }
+
+        .popup-text {
+            font-size: 13.5px;
+            color: #ffffff;
+        }
+
+        .popup-text strong {
+            color: #c5a059;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="nav-logo">
+            <img src="IMG_2077.png" alt="Nexora Invest Logo">
+            <div class="logo-text">NEXORA INVEST</div>
+        </div>
+        <div class="nav-buttons">
+            <a href="connexion.html" class="btn btn-login">Connexion</a>
+            <a href="inscription.html" class="btn btn-register">Inscription</a>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>Comment ça fonctionne ? / How it works ?</h1>
+        <p>Découvrez comment Nexora Invest automatise vos gains grâce au Cloud Mining de haute performance.</p>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">Pourquoi choisir Nexora Invest ?</div>
+        <div class="advantages-grid">
+            
+            <div class="adv-card">
+                <h3>📈 Rendements Quotidiens Garantis</h3>
+                <p>Générez jusqu'à 20% de profits nets par jour grâce à nos infrastructures de minage de pointe. Vos gains sont calculés et versés automatiquement chaque jour à 3h00 AM.</p>
+            </div>
+
+            <div class="adv-card">
+                <h3>🔒 Sécurité & Confidentialité Absolue</h3>
+                <p>Notre plateforme intègre les protocoles de sécurité Web3 les plus avancés. Vos données personnelles sont cryptées et vos transactions crypto (TRC20 / BEP20) sont entièrement sécurisées.</p>
+            </div>
+
+            <div class="adv-card">
+                <h3>⚙️ Automatisation Intelligente</h3>
+                <p>Plus besoin d'attendre des validations manuelles interminables. Notre technologie valide vos transactions instantanément pour que votre argent commence à travailler sans perdre une seconde.</p>
+            </div>
+
+            <div class="adv-card">
+                <h3>👥 Partenariat Lucratif</h3>
+                <p>Maximisez vos revenus sans effort ! Partagez votre lien exclusif et touchez 2% de commissions récurrentes sur chaque gain quotidien de vos partenaires.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="steps-container">
+        <div class="section-title" style="margin-bottom: 30px;">3 Étapes Simples pour Commencer</div>
+        <div class="steps-list">
+            
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <h4>Créer votre Compte (Sign Up)</h4>
+                    <p>Inscrivez-vous en moins de 2 minutes. Remplissez vos informations de base et configurez votre adresse de retrait sécurisée USDT.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <h4>Activer un Plan d'Investissement</h4>
+                    <p>Effectuez un dépôt flexible (minimum 6 USDT) sur le réseau de votre choix (TRC20 ou BEP20). Choisissez l'un de nos 5 plans de minage adaptés à vos objectifs.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <h4>Retirer vos Profits sous 24h</h4>
+                    <p>Suivez l'évolution de vos gains en temps réel sur votre tableau de bord. Vos demandes de retraits sont traitées et envoyées directement sur votre portefeuille en moins de 24 heures.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="activity-popup">
+        <span class="popup-icon">✅</span>
+        <div class="popup-text" id="popup-content">
+            Le client <strong>Jean-Pierre</strong> a retiré <strong>450 USDT</strong> avec succès !
+        </div>
+    </div>
+
+    <script>
+        // Lis fo non yo (nou ka mete anpil ladan l)
+        const fakeNames = ["Marc-Antoine", "Sarah", "David", "Jonathan", "Rodrigue", "Clara", "Alexandre", "Emmanuelle", "Steven", "Fabrice", "Michèle", "Vanessa", "Guillaume", "Ricardo", "Tatiana"];
+        
+        const popup = document.getElementById('activity-popup');
+        const popupContent = document.getElementById('popup-content');
+
+        function generateFakeActivity() {
+            // Chwazi yon non oza
+            const randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            // Chwazi yon montan ant 210 ak 1400 USDT
+            const randomAmount = Math.floor(Math.random() * (1400 - 210 + 1)) + 210;
+            
+            // Chanje tèks popup la
+            popupContent.innerHTML = `Le client <strong>${randomName}</strong> a retiré <strong>${randomAmount} USDT</strong> avec succès !`;
+            
+            // Afiche popup la
+            popup.classList.add('show');
+            
+            // Kache l apre 4 segond
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 4000);
+        }
+
+        // Lanse popup la chak 8 segond (4s afiche, 4s kache)
+        setInterval(generateFakeActivity, 8000);
+        
+        // Lanse premye a apre 2 segond lè paj la fin louvri
+        setTimeout(generateFakeActivity, 2000);
+    </script>
+
+</body>
+</html>
