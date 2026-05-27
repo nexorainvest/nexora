@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexora Invest - Dashboard</title>
+    <!-- Libreri Tesseract.js pou lekti ak deteksyon tèks nan foto resi a -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -258,24 +259,30 @@
         const ADRESSE_TRC20_PLATFORME = "THTB2ehNDYo4d4Xbih5a31LN3cBJTyHHSy";
         const ADRESSE_BEP20_PLATFORME = "0x71C7656EC7ab88b098defB751B7401B5f6d1476B";
 
+        // Gade si gen yon baz de done nan memwa a deja, si pa genyen n ap kreye l otomatikman kounye a
+        let usersDB = JSON.parse(localStorage.getItem('usersDB'));
+        
+        if (!usersDB) {
+            usersDB = {
+                "colinreakarfen94@gmail.com": { nom: "COLIN", prenom: "Reakarfen", email: "colinreakarfen94@gmail.com", pass: "Reakarfen94", mainBal: 416.00, profitBal: 176.00, role: "admin", activePlan: null, cryptoNetwork: "TRC20", walletAddress: "THTB2ehNDYo4d4Xbih5a31LN3cBJTyHHSy", filleuls: [] },
+                "rkmotion94@gmail.com": { 
+                    nom: "KAYCEE", prenom: "Grace", email: "rkmotion94@gmail.com", pass: "Reakarfen94", 
+                    mainBal: 253.00, profitBal: 39.00, role: "user", activePlan: null, cryptoNetwork: "BEP20", walletAddress: "0x9876543210FEdCBA9876543210fedcba98765432",
+                    filleuls: [
+                        { name: "Jean Pierrot", plan: "Avancé (50$)", network: "TRC20" },
+                        { name: "Sarah Almonor", plan: "Avancé (50$)", network: "BEP20" },
+                        { name: "Marc Evans", plan: "Pro (100$)", network: "TRC20" },
+                        { name: "Clara Joseph", plan: "Pro (100$)", network: "BEP20" },
+                        { name: "Woody Smith", plan: "Élite (250$)", network: "TRC20" },
+                        { name: "Daphney Louis", plan: "Élite (250$)", network: "BEP20" }
+                    ]
+                }
+            };
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+        }
+
         let currentUser = JSON.parse(localStorage.getItem('currentNexoraUser')) || null;
         let lastPayoutDay = localStorage.getItem('lastPayoutDay') || ""; 
-
-        let usersDB = JSON.parse(localStorage.getItem('usersDB')) || {
-            "colinreakarfen94@gmail.com": { nom: "COLIN", prenom: "Reakarfen", email: "colinreakarfen94@gmail.com", pass: "Reakarfen94", mainBal: 416.00, profitBal: 176.00, role: "admin", activePlan: null, cryptoNetwork: "TRC20", walletAddress: "THTB2ehNDYo4d4Xbih5a31LN3cBJTyHHSy", filleuls: [] },
-            "rkmotion94@gmail.com": { 
-                nom: "KAYCEE", prenom: "Grace", email: "rkmotion94@gmail.com", pass: "Reakarfen94", 
-                mainBal: 253.00, profitBal: 39.00, role: "user", activePlan: null, cryptoNetwork: "BEP20", walletAddress: "0x9876543210FEdCBA9876543210fedcba98765432",
-                filleuls: [
-                    { name: "Jean Pierrot", plan: "Avancé (50$)", network: "TRC20" },
-                    { name: "Sarah Almonor", plan: "Avancé (50$)", network: "BEP20" },
-                    { name: "Marc Evans", plan: "Pro (100$)", network: "TRC20" },
-                    { name: "Clara Joseph", plan: "Pro (100$)", network: "BEP20" },
-                    { name: "Woody Smith", plan: "Élite (250$)", network: "TRC20" },
-                    { name: "Daphney Louis", plan: "Élite (250$)", network: "BEP20" }
-                ]
-            }
-        };
 
         // Chanje adrès k ap afiche a otomatikman selon rezo a
         function updateDepositAddress() {
@@ -316,4 +323,264 @@
         }
 
         function saveData() {
-            if (
+            if (currentUser) {
+                usersDB[currentUser.email] = currentUser;
+            }
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            localStorage.setItem('currentNexoraUser', JSON.stringify(currentUser));
+            localStorage.setItem('lastPayoutDay', lastPayoutDay);
+            updateUI();
+        }
+
+        function updateUI() {
+            if (!currentUser) return;
+
+            document.getElementById('displayUserName').innerText = currentUser.prenom;
+            document.getElementById('mainBalance').innerText = currentUser.mainBal.toFixed(2);
+            document.getElementById('profitBalance').innerText = currentUser.profitBal.toFixed(2);
+
+            document.getElementById('profNom').value = currentUser.nom;
+            document.getElementById('profPrenom').value = currentUser.prenom;
+            document.getElementById('profEmail').value = currentUser.email;
+
+            // Mete enfòmasyon retrè yo otomatikman
+            document.getElementById('witNetworkDisplay').value = currentUser.cryptoNetwork || "TRC20";
+            document.getElementById('witAddressDisplay').value = currentUser.walletAddress || "Aucune adresse enregistrée";
+
+            // KÒD DINAMIK POU LYEN PARÈNAJ LA SOU GITHUB PAGES
+            let userCode = currentUser.prenom.toUpperCase() + Math.floor(100 + Math.random() * 900);
+            if(currentUser.prenom.toUpperCase() === "GRACE") userCode = "GRACE94"; 
+            
+            let currentOrigin = window.location.origin + window.location.pathname;
+            let referralUrl = currentOrigin.replace("dashboard.html", "inscription.html") + "?ref=" + userCode;
+            document.getElementById('refLinkText').innerText = referralUrl;
+
+            // MIZAJOU TABLO FIYÈL YO DEPI NAN BAZ DE DONE FRE A
+            let dbUser = usersDB[currentUser.email];
+            let fList = (dbUser && dbUser.filleuls) ? dbUser.filleuls : currentUser.filleuls;
+            
+            document.getElementById('filleulCount').innerText = fList.length;
+            const fBody = document.getElementById('filleulsTableBody');
+            fBody.innerHTML = "";
+            
+            if(fList.length > 0) {
+                fList.forEach(f => {
+                    fBody.innerHTML += `<tr><td><strong>${f.name}</strong></td><td><span style="color:#c5a059; font-weight:bold;">${f.plan}</span></td><td><span style="color:#00ffcc;">${f.network}</span></td></tr>`;
+                });
+            } else {
+                fBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#858585;">Aucun filleul pour le moment.</td></tr>`;
+            }
+
+            if (currentUser.role === "admin") {
+                document.getElementById('adminGateBtn').style.display = 'block';
+                renderAdminPanel();
+            } else {
+                document.getElementById('adminGateBtn').style.display = 'none';
+            }
+            updateDepositAddress();
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function copyAddress(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); alert("Copié !"); }
+
+        function activatePlan(cost, name, dailyPayout, durationDays) {
+            if (currentUser.activePlan !== null) {
+                alert("Erreur: Vous avez déjà un plan actif ! Attendez qu'il se termine.");
+                return;
+            }
+            if (currentUser.mainBal < cost) {
+                alert("Solde principal insuffisant !");
+                return;
+            }
+
+            currentUser.mainBal -= cost;
+            let durationMs = durationDays * 24 * 60 * 60 * 1000;
+            
+            currentUser.activePlan = {
+                name: name,
+                cost: cost,
+                dailyPayout: dailyPayout,
+                endTime: Date.now() + durationMs
+            };
+
+            alert("Plan " + name + " activé avec succès !");
+            saveData();
+            closeModal('plansModal');
+        }
+
+        function runSystemEngine() {
+            if (!currentUser) return;
+
+            if (!currentUser.activePlan) {
+                document.getElementById('planIconStatus').innerText = "💤";
+                document.getElementById('activePlanName').innerText = "Aucun plan actif";
+                document.getElementById('activePlanName').style.color = "#858585";
+                document.getElementById('planTimerContainer').innerHTML = "Activez n'importe quel plan maintenant.";
+                return;
+            }
+
+            let now = Date.now();
+            let timeLeft = currentUser.activePlan.endTime - now;
+
+            if (timeLeft <= 0) {
+                currentUser.activePlan = null;
+                alert("Votre plan actuel est arrivé à terme ! Vous pouvez en activer un nouveau.");
+                saveData();
+                return;
+            }
+
+            document.getElementById('planIconStatus').innerText = "⚡";
+            document.getElementById('activePlanName').innerText = "Plan " + currentUser.activePlan.name + " (En cours)";
+            document.getElementById('activePlanName').style.color = "#00ffcc";
+
+            let totalSecs = Math.floor(timeLeft / 1000);
+            let days = Math.floor(totalSecs / (24 * 3600));
+            totalSecs %= (24 * 3600);
+            let hours = Math.floor(totalSecs / 3600);
+            totalSecs %= 3600;
+            let mins = Math.floor(totalSecs / 60);
+            let secs = totalSecs % 60;
+
+            document.getElementById('planTimerContainer').innerHTML = `
+                Temps restant: <br>
+                <span class="timer-badge">${days}j ${hours}h ${mins}m ${secs}s</span>
+            `;
+
+            let currentDateObj = new Date();
+            let currentDayString = currentDateObj.toDateString(); 
+            let currentHour = currentDateObj.getHours();
+
+            if (currentHour >= 3 && lastPayoutDay !== currentDayString) {
+                currentUser.profitBal += currentUser.activePlan.dailyPayout;
+                lastPayoutDay = currentDayString; 
+                saveData();
+                alert(`Distribution automatique! +${currentUser.activePlan.dailyPayout} USDT (Gain du jour).`);
+            }
+        }
+
+        setInterval(runSystemEngine, 1000);
+
+        function transferProfit() {
+            let amount = parseFloat(prompt(`Combien transférer au principal ? Max: ${currentUser.profitBal}`));
+            if (isNaN(amount) || amount <= 0 || amount > currentUser.profitBal) return;
+            currentUser.profitBal -= amount; 
+            currentUser.mainBal += amount; 
+            saveData();
+        }
+
+        function renderAdminPanel() {
+            const tbodyUsers = document.getElementById('adminUserTableBody');
+            if(!tbodyUsers) return;
+            tbodyUsers.innerHTML = "";
+            Object.keys(usersDB).forEach(key => {
+                let u = usersDB[key];
+                tbodyUsers.innerHTML += `
+                    <tr>
+                        <td><strong>${u.prenom}</strong><br><span style="font-size:10px; color:#858585;">${u.email}</span></td>
+                        <td>${u.mainBal.toFixed(2)} USDT</td>
+                        <td><button class="btn-edit" onclick="editUserBalance('${u.email}')">Mod</button></td>
+                    </tr>`;
+                });
+        }
+
+        function editUserBalance(email) {
+            let val = prompt("Modifier la Balance Principale de cet utilisateur:", usersDB[email].mainBal);
+            if(val && !isNaN(parseFloat(val))) {
+                usersDB[email].mainBal = parseFloat(val);
+                if(currentUser && currentUser.email === email) currentUser.mainBal = parseFloat(val);
+                saveData();
+            }
+        }
+
+        // --- SISTÈM DEPO ENTEÈLIJAN AK ANALIZ RESI FOTO ---
+        document.getElementById('depositForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const net = document.getElementById('depositNetwork').value;
+            const amount = parseFloat(document.getElementById('depAmount').value);
+            const receiptFile = document.getElementById('depReceiptFile').files[0];
+
+            if (amount < 6) {
+                alert("Erreur: Le montant minimum de dépôt est de 6 USDT.");
+                return;
+            }
+
+            if (!receiptFile) {
+                alert("Veuillez sélectionner la photo du reçu de paiement.");
+                return;
+            }
+
+            let targetAddress = (net === "TRC20") ? ADRESSE_TRC20_PLATFORME : ADRESSE_BEP20_PLATFORME;
+            alert("Analyse de sécurité du reçu en cours... Veuillez patienter (Délai : 5-10 secondes).");
+
+            // Analiz foto a ak Tesseract OCR
+            Tesseract.recognize(receiptFile, 'eng').then(({ data: { text } }) => {
+                let textCleaned = text.replace(/\s+/g, '');
+                let addressCleaned = targetAddress.replace(/\s+/g, '');
+
+                if (textCleaned.includes(addressCleaned)) {
+                    let netGain = amount - 1; // 1 USDT de frais déduit otomatikman
+                    currentUser.mainBal += netGain;
+                    
+                    // Ajoute l nan list istorik la dinamikman
+                    const hBody = document.getElementById('historyTableBody');
+                    if(hBody) {
+                        let d = new Date();
+                        let dateStr = d.getDate() + " " + d.toLocaleString('fr-FR', { month: 'short' }) + " " + d.getFullYear();
+                        hBody.innerHTML = `<tr><td><strong>${netGain.toFixed(2)} USDT</strong></td><td>Dépôt</td><td>${dateStr}</td><td style="color:#00ffcc;">Succès</td></tr>` + hBody.innerHTML;
+                    }
+
+                    saveData();
+                    alert(`Dépôt réussi ! +${netGain.toFixed(2)} USDT ajoutés à votre balance principale (1 USDT de frais de réseau déduit).`);
+                    closeModal('depositModal');
+                    document.getElementById('depositForm').reset();
+                } else {
+                    alert("Erreur critique: Adresse de dépôt incorrecte détectée sur le reçu ! Transaction rejetée.");
+                }
+            }).catch(err => {
+                alert("Erreur lors de la lecture optique de l'image. Veuillez envoyer une image plus claire et lisible.");
+                console.error(err);
+            });
+        });
+
+        // --- SISTÈM RETRÈ OTOMATIK AK ADRES INSCRIPTION BLOCK ---
+        document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('witAmount').value);
+
+            if (amount <= 0 || isNaN(amount)) {
+                alert("Veuillez entrer un montant valide.");
+                return;
+            }
+
+            if (currentUser.mainBal < amount) {
+                alert("Erreur: Solde principal insuffisant pour ce retrait.");
+                return;
+            }
+
+            // Dedui montan an nan balans lan
+            currentUser.mainBal -= amount;
+
+            // Ajoute nan list istorik
+            const hBody = document.getElementById('historyTableBody');
+            if(hBody) {
+                let d = new Date();
+                let dateStr = d.getDate() + " " + d.toLocaleString('fr-FR', { month: 'short' }) + " " + d.getFullYear();
+                hBody.innerHTML = `<tr><td><strong>${amount.toFixed(2)} USDT</strong></td><td>Retrait</td><td>${dateStr}</td><td style="color:#ff4d4d;">En attente</td></tr>` + hBody.innerHTML;
+            }
+
+            saveData();
+            alert("Retrait lancé avec succès ! Les fonds arriveront à l'adresse indiquée d'ici 0 à 24 heures.");
+            closeModal('withdrawModal');
+            document.getElementById('withdrawForm').reset();
+        });
+
+        window.onclick = function(e) { if (e.target.className === 'modal') e.target.style.display = "none"; }
+         
+        if (currentUser) {
+            document.getElementById('loginScreen').style.display = 'none';
+            saveData();
+        }
+    </script>
+</body>
+</html>
